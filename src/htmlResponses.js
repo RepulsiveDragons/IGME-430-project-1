@@ -33,5 +33,5 @@ module.exports = {
   getIndex,
   getCSS,
   getClient,
-  getArmorBuilder
+  getArmorBuilder,
 };
