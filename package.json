@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/RepulsiveDragons/http-api-assignment#readme",
   "dependencies": {
+    "bulma": "^0.9.4",
     "nodemon": "^3.0.1"
   }
 }

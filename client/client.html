@@ -1,21 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Our simple HTTP server</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello Bulma!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" type="text/css" href="/style.css">
   <script type="module" src="client.js"></script>
+  
 </head>
 <body>
-  <section id="content">
-    <button id="createBuild">Create Build</button>
-    <select class="armorSelect" id="head"></select>
-    <select class="armorSelect" id="chest"></select>
-    <select class="armorSelect" id="gloves"></select>
-    <select class="armorSelect" id="waist"></select>
-    <select class="armorSelect" id="legs"></select>
-    <button id="saveButton" action="/saveBuild" method="post">Save Build</button>
-    <section id="status"></section>
+
+  <section class="hero is-medium is-primary has-text-centered">
+    <div class="hero-body">
+      <h1 class="title is-center">
+        Monster Hunter Set Builder
+      </h1>
+      <p class="subtitle">
+        some text here
+      </p>
+    </div>
   </section>
+
+  <div id="content" class="box has-text-centered has-background-grey-lighter">
+    <div class="control p-2">
+      <span class="subtitle has-text-weight-bold">Head:</span>
+      <div class="select is-rounded">
+        <select class="select" id="head"></select>
+      </div>
+    </div>
+
+    <div class="control p-2">
+      <span class="subtitle has-text-weight-bold">Chest:</span>
+      <div class="select is-rounded">
+        <select class="select" id="chest"></select>
+      </div>
+    </div>
+
+    <div class="control p-2">
+      <span class="subtitle has-text-weight-bold">Gloves:</span>
+      <div class="select is-rounded">
+        <select class="select" id="gloves"></select>
+      </div>
+    </div>
+
+    <div class="control p-2">
+      <span class="subtitle has-text-weight-bold">Waist:</span>
+      <div class="select is-rounded">
+        <select class="select" id="waist"></select>
+      </div>
+    </div>
+
+    <div class="control p-2">
+      <span class="subtitle has-text-weight-bold">Legs:</span>
+      <div class="select is-rounded">
+        <select class="select" id="legs"></select>
+      </div>
+    </div>
+
+    <div class="buttons control is-inline-block mx-2 p-4">
+      <button class="button is-success is-light" id="createBuild">Create Build</button>
+      <button class="button is-info is-light" id="saveButton" action="/saveBuild" method="post">Save Build</button>
+    </div>
+
+    <section class="content" id="status"></section>
+  </div>
+
   <section id="build">
     <span id="headBuild"></span>
   </section>
