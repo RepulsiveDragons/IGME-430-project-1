@@ -2,15 +2,16 @@ import * as armorBuilder from "../src/armorBuilder";
 
 //global variables;
 const urlMH = 'https://mhw-db.com/armor';
-const armorSet = [];
 
-const handleResponse = async (response) => {
-  const content = document.querySelector("#content");
+const handleResponse = async (response, method) => {
+  const content = document.querySelector("#status");
 
   switch(response.status) {
     case 200: 
       content.innerHTML = `<b>Success</b>`;
       break;
+    case 201:
+      content.innerHTML = `<b>Successful Post</b>`
     case 400: 
       content.innerHTML = `<b>Bad Request</b>`;
       break;
@@ -34,19 +35,28 @@ const handleResponse = async (response) => {
       break;
   }
 
-  response.text().then((resText) => {
-    const contentType = response.headers.get('Content-Type');
+  if(method === 'get'){
+    let obj = await response.json();
+    console.log(obj);
 
-    if(contentType === 'application/json') {
-      const parsedResponse = JSON.parse(resText);
-      console.log(parsedResponse);
-      content.innerHTML += `<p>${parsedResponse.message}</p>`;
-    } else if (contentType === 'text/xml') { 
-      const parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
-      console.log(parsedResponse);
-      content.innerHTML += `<p>${parsedResponse.querySelector('message').textContent}</p>`;
+    if(response.status === 200){
+      let jsonString = JSON.stringify(obj.users);
+      content.innerHTML += `<p>${jsonString}</p>`;
+    } else{
+      content.innerHTML += `<p>${obj.message}</p>`;
     }
-  })
+  }
+  else if(method === 'head') {
+    content.innerHTML += '<p>Meta Data Received</p>';
+  }
+  else if(method === 'post'){
+    let obj = await response.json();
+    console.log(obj);
+
+    if(obj.message){
+      content.innerHTML += `<p>${obj.message}</p>`;
+    }
+  }
 
   //let resObj = await response.json();
 
@@ -92,7 +102,7 @@ const fetchArmor = async (id) => {
 const getFetch = async (headSelector,chestSelector,glovesSelector,waistSelector,legsSelector) => {
 
   //a query call to get only armors that are of the rank master
-  fetch('https://mhw-db.com/armor?q={"rank":"master"}')
+  fetch(urlMH + '?q={"rank":"master"}')
   .then(response => response.json())
   .then(armor => {
     const listOfHeads = [];
@@ -125,25 +135,43 @@ const getFetch = async (headSelector,chestSelector,glovesSelector,waistSelector,
     createOptions(listOfGloves, glovesSelector);
     createOptions(listOfWaists, waistSelector);
     createOptions(listOfLegs, legsSelector);
-    console.log(headSelector);
-
   });
 };
 
 //Call the API to get the json of the selected armor pieces
 const getBuild = (headSelector,chestSelector,glovesSelector,waistSelector,legsSelector) =>{
+  armorBuilder.clearObjects();
+
   fetchArmor(headSelector.value);
   fetchArmor(chestSelector.value);
   fetchArmor(glovesSelector.value);
   fetchArmor(waistSelector.value);
   fetchArmor(legsSelector.value);
+  
+}
 
-  //createBuild(armorSet);
-  //armorBuilder.createBuild();
+const sendPost = async (saveButton) => {
+  const saveAction = saveButton.getAttribute('action');
+  const saveMethod = saveButton.getAttribute('method');
+
+  const data = armorBuilder.returnArmorSetObject();
+  console.log(data);
+
+  let response = await fetch(saveAction, {
+    method: saveMethod,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: data,
+  });
+
+  handleResponse(response,saveMethod);
 }
 
 const init = () => {
-  const getMHAPI = document.querySelector("#getMH");
+  const createBuild = document.querySelector("#createBuild");
+  const saveButton = document.querySelector("#saveButton");
   const headSelector = document.querySelector("#head");
   const chestSelector = document.querySelector("#chest");
   const glovesSelector = document.querySelector("#gloves");
@@ -153,7 +181,13 @@ const init = () => {
   const getInfo = () => getBuild(headSelector,chestSelector,glovesSelector,waistSelector,legsSelector);
   getFetch(headSelector,chestSelector,glovesSelector,waistSelector,legsSelector);
 
-  getMHAPI.addEventListener('click', getInfo);
+  const save = (e) => {
+    e.preventDefault;
+    sendPost(saveButton);
+    return false;
+  }
+  createBuild.addEventListener('click', getInfo);
+  saveButton.addEventListener('click', save);
 };
 
 window.onload = init;
