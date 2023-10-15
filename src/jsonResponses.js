@@ -16,7 +16,7 @@ const saveBuild = (request, response, body) => {
 
   const responseCode = 201;
   armorSetArray.push(body);
-  console.log(body);
+  console.log(body.head.name);
   return respondJson(request, response, responseCode, responseJson);
 };
 

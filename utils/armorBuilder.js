@@ -2,35 +2,17 @@ const armorSetArray = [];
 let armorSetObject = {};
 let combinedSkillsObject = {};
 
+const headName = document.querySelector('#headName');
+const chestName = document.querySelector('#chestName');
+const glovesName = document.querySelector('#glovesName');
+const waistName = document.querySelector('#waistName');
+const legsName = document.querySelector('#legsName');
+
 export const clearObjects = () => {
   armorSetObject = {};
   combinedSkillsObject = {};
 };
-// export const createBuild = () =>{
-//   const content = document.querySelector('#headBuild');
-//   let string;
 
-//   for (let i = 0; i < 5; i++) {
-//     console.log(armorSet[i]);
-//     const armor = armorSet[i];
-//     string += `${armor.type}: ${armor.name}, `;
-
-//     for (const skill of armor.skills) {
-//         if (!skillsObject[skill.skillName]) {
-//           skillsObject[skill.skillName] = {};
-//         }
-
-//         skillsObject[skill.skillName].skillName = skill.skillName;
-//         skillsObject[skill.skillName].level += skill.level;
-//     }
-//   }
-
-//   content.innerHTML = string;
-//   console.log(skillsObject);
-// }
-
-// get the necessary information from the armor json object
-// store the data into a global object to be used later
 const combineSkills = (skillName, level) => {
   if (!combinedSkillsObject[skillName]) {
     combinedSkillsObject[skillName] = {};
@@ -54,11 +36,34 @@ export const sendArmor = (armor) => {
     combineSkills(armor.skills[i].skillName, armor.skills[i].level);
   }
 
-  armorSetArray.push(armorSetObject);
-  console.log(armorSetObject);
+  displayArmor(armor.type, armor.name);
+  //armorSetArray.push(armorSetObject);
 };
 
 export const returnArmorSetObject = () => {
   armorSetObject['combined skills'] = combinedSkillsObject;
   return armorSetObject;
 };
+
+const displayArmor = (type, name) => {
+
+  switch(type){
+    case 'head':
+      headName.innerHTML = name;
+      break;
+    case 'chest':
+      chestName.innerHTML = name;
+      break;
+    case 'gloves':
+      glovesName.innerHTML = name;
+      break;
+    case 'waist':
+      waistName.innerHTML = name;
+      break;
+    case 'legs':
+      legsName.innerHTML = name;
+      break;
+    default:
+      return;
+  }
+}

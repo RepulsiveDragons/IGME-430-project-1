@@ -1,4 +1,4 @@
-import * as armorBuilder from "../src/armorBuilder";
+import * as armorBuilder from "../utils/armorBuilder";
 
 //global variables;
 const urlMH = 'https://mhw-db.com/armor';
@@ -12,6 +12,7 @@ const handleResponse = async (response, method) => {
       break;
     case 201:
       content.innerHTML = `<b>Successful Post</b>`
+      break;
     case 400: 
       content.innerHTML = `<b>Bad Request</b>`;
       break;
@@ -91,8 +92,6 @@ const fetchArmor = async (id) => {
   fetch(urlMH + '/' + id)
   .then(response => response.json())
   .then((armor) => {
-    //armorSet.push(armor);
-
     //send the armor json object to armorBuilder.js to extract the data
     armorBuilder.sendArmor(armor);
   });
@@ -102,7 +101,7 @@ const fetchArmor = async (id) => {
 const getFetch = async (headSelector,chestSelector,glovesSelector,waistSelector,legsSelector) => {
 
   //a query call to get only armors that are of the rank master
-  fetch(urlMH + '?q={"rank":"master"}')
+  fetch(urlMH + '?q={"rank":"high"}')
   .then(response => response.json())
   .then(armor => {
     const listOfHeads = [];
@@ -147,15 +146,14 @@ const getBuild = (headSelector,chestSelector,glovesSelector,waistSelector,legsSe
   fetchArmor(glovesSelector.value);
   fetchArmor(waistSelector.value);
   fetchArmor(legsSelector.value);
-  
 }
 
 const sendPost = async (saveButton) => {
   const saveAction = saveButton.getAttribute('action');
   const saveMethod = saveButton.getAttribute('method');
 
-  const data = armorBuilder.returnArmorSetObject();
-  console.log(data);
+  const data = JSON.stringify(armorBuilder.returnArmorSetObject());
+  console.log(armorBuilder.returnArmorSetObject().head.name)
 
   let response = await fetch(saveAction, {
     method: saveMethod,

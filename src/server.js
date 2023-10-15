@@ -7,23 +7,21 @@ const jsonHandler = require('./jsonResponses.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const parseBody = (request, response, handler) => {
-  let body = {};
-  
+  let body = [];
+
   request.on('error', (err) => {
     console.dir(err);
     response.statusCode = 400;
     response.end();
   });
 
-  request.on('data', (chunk) => {
-    body = chunk;
-    console.log(chunk);
+  request.on('data', (object) => {
+    body.push(object)
   });
 
   request.on('end', () => {
-    const bodyString = JSON.stringify(body);
-    const bodyParams = query.parse(bodyString);
-
+    const bodyString = Buffer.concat(body).toString();
+    const bodyParams = JSON.parse(bodyString);
     handler(request, response, bodyParams);
   });
 };
@@ -39,7 +37,7 @@ const urlStruct = {
     '/': htmlHandler.getIndex,
     '/style.css': htmlHandler.getCSS,
     '/client.js': htmlHandler.getClient,
-    '/src/armorBuilder': htmlHandler.getArmorBuilder,
+    '/utils/armorBuilder': htmlHandler.getArmorBuilder,
   },
   POST: {
     '/saveBuild': handlePost,
@@ -50,16 +48,6 @@ const onRequest = (request, response) => {
   console.log(request.url);
 
   const parsedUrl = url.parse(request.url);
-
-  // const params = query.parse(parsedUrl.query);
-
-  // const acceptedTypes = request.headers.accept.split(',');
-
-  // if (urlStruct[parsedUrl.pathname]) {
-  //   urlStruct[parsedUrl.pathname](request, response, acceptedTypes, params);
-  // } else {
-  //   urlStruct.notFound(request, response, params);
-  // }
 
   if (!urlStruct[request.method]) {
     return urlStruct.HEAD.notFound(request, response);
