@@ -39,13 +39,6 @@ const handleResponse = async (response, method) => {
   if(method === 'get'){
     let obj = await response.json();
     console.log(obj);
-
-    if(response.status === 200){
-      let jsonString = JSON.stringify(obj.users);
-      content.innerHTML += `<p>${jsonString}</p>`;
-    } else{
-      content.innerHTML += `<p>${obj.message}</p>`;
-    }
   }
   else if(method === 'head') {
     content.innerHTML += '<p>Meta Data Received</p>';
@@ -148,6 +141,21 @@ const getBuild = (headSelector,chestSelector,glovesSelector,waistSelector,legsSe
   fetchArmor(legsSelector.value);
 }
 
+const getSave = async (loadButton) => {
+  
+  const loadAction = loadButton.getAttribute('action');
+  const method = 'get';
+
+  let response = await fetch(loadAction, {
+    method,
+    headers: {
+        'Accept': 'application/json'
+    },
+  });
+
+  handleResponse(response, method);
+};
+
 const sendPost = async (saveButton) => {
   const saveAction = saveButton.getAttribute('action');
   const saveMethod = saveButton.getAttribute('method');
@@ -170,6 +178,7 @@ const sendPost = async (saveButton) => {
 const init = () => {
   const createBuild = document.querySelector("#createBuild");
   const saveButton = document.querySelector("#saveButton");
+  const loadButton = document.querySelector("#getSave");
   const headSelector = document.querySelector("#head");
   const chestSelector = document.querySelector("#chest");
   const glovesSelector = document.querySelector("#gloves");
@@ -184,8 +193,12 @@ const init = () => {
     sendPost(saveButton);
     return false;
   }
+
+  const loadSave = () => getSave(loadButton);
+
   createBuild.addEventListener('click', getInfo);
   saveButton.addEventListener('click', save);
+  loadButton.addEventListener('click', loadSave);
 };
 
 window.onload = init;

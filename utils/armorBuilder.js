@@ -67,3 +67,11 @@ const displayArmor = (type, name) => {
       return;
   }
 }
+
+export const displayArmorObject = (object) => {
+  headName.innerHTML = object[head].name;
+  chestName.innerHTML = object[chest].name;
+  glovesName.innerHTML = object[gloves].name;
+  waistName.innerHTML = object[waist].name;
+  legsName.innerHTML = object[legs].name;
+}

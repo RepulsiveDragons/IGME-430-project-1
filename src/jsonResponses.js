@@ -20,6 +20,27 @@ const saveBuild = (request, response, body) => {
   return respondJson(request, response, responseCode, responseJson);
 };
 
+const getSave = (request, response) => {
+  const armorSet = armorSetArray[0];
+  const responseJSON = armorSet;
+
+  if (armorSetArray.length === 0) {
+    return respondJson(request, response, 400, responseJSON);
+  }
+
+  return respondJson(request, response, 200, responseJSON);
+};
+
+const notFound = (request, response) => {
+  const responseJSON = {
+    message: 'The page you are looking for was not found.',
+    id: 'notFound',
+  };
+  respondJson(request, response, 404, responseJSON);
+};
+
 module.exports = {
   saveBuild,
+  notFound,
+  getSave,
 };

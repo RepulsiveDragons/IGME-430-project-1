@@ -1,13 +1,13 @@
 const http = require('http');
 const url = require('url');
-const query = require('querystring');
+// const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const parseBody = (request, response, handler) => {
-  let body = [];
+  const body = [];
 
   request.on('error', (err) => {
     console.dir(err);
@@ -16,7 +16,7 @@ const parseBody = (request, response, handler) => {
   });
 
   request.on('data', (object) => {
-    body.push(object)
+    body.push(object);
   });
 
   request.on('end', () => {
@@ -38,6 +38,8 @@ const urlStruct = {
     '/style.css': htmlHandler.getCSS,
     '/client.js': htmlHandler.getClient,
     '/utils/armorBuilder': htmlHandler.getArmorBuilder,
+    '/loadSave': jsonHandler.getSave,
+    notFound: jsonHandler.notFound,
   },
   POST: {
     '/saveBuild': handlePost,
