@@ -3,7 +3,7 @@ import * as armorBuilder from "../utils/armorBuilder";
 //global variables;
 const urlMH = 'https://mhw-db.com/armor';
 
-const handleResponse = async (response, method) => {
+const handleResponse = async (response, method, saveButtonName, saveSelect) => {
   const content = document.querySelector("#status");
 
   switch(response.status) {
@@ -12,6 +12,9 @@ const handleResponse = async (response, method) => {
       break;
     case 201:
       content.innerHTML = `<b>Successful Post</b>`
+      break;
+    case 204:
+      content.innerHTML = `<b>Updated Successfully</b>`
       break;
     case 400: 
       content.innerHTML = `<b>Bad Request</b>`;
@@ -51,6 +54,15 @@ const handleResponse = async (response, method) => {
     content.innerHTML += '<p>Meta Data Received</p>';
   }
   else if(method === 'post'){
+    if(response.status === 204) return;
+
+    if(response.status === 201){
+      let option = document.createElement("option");
+      option.value = `?saveName=${saveButtonName.value}`;
+      option.text = saveButtonName.value;
+      saveSelect.appendChild(option);
+    }
+
     let obj = await response.json();
     console.log(obj);
 
@@ -78,8 +90,6 @@ const createOptions = (list,selector) => {
     let option = document.createElement("option");
     option.value = list[i].id;
     option.text = list[i].name;
-    option.name = list[i].name;
-    option.slug = list[i].slug;
     selector.appendChild(option);
   }
 }
@@ -138,6 +148,10 @@ const getFetch = async (headSelector,chestSelector,glovesSelector,waistSelector,
 const getBuild = (headSelector,chestSelector,glovesSelector,waistSelector,legsSelector) =>{
   armorBuilder.clearObjects();
 
+  if(!headSelector.value){
+    return;
+  }
+
   fetchArmor(headSelector.value);
   fetchArmor(chestSelector.value);
   fetchArmor(glovesSelector.value);
@@ -180,12 +194,8 @@ const sendPost = async (saveButton, saveButtonName, saveSelect) => {
     body: data,
   });
 
-  let option = document.createElement("option");
-  option.value = `?saveName=${saveButtonName.value}`;
-  option.text = saveButtonName.value;
-  saveSelect.appendChild(option);
 
-  handleResponse(response,saveMethod);
+  handleResponse(response,saveMethod,saveButtonName,saveSelect);
 }
 
 const init = () => {
