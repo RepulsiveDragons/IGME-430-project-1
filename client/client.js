@@ -8,7 +8,7 @@ const handleResponse = async (response, method) => {
 
   switch(response.status) {
     case 200: 
-      content.innerHTML = `<b>Success</b>`;
+      content.innerHTML = `<b>Loaded Successfully</b>`;
       break;
     case 201:
       content.innerHTML = `<b>Successful Post</b>`
@@ -38,7 +38,14 @@ const handleResponse = async (response, method) => {
 
   if(method === 'get'){
     let obj = await response.json();
-    console.log(obj);
+
+    if(response.status === 400){
+      content.innerHTML += obj.message;
+    }
+    else{
+      console.log(obj);
+      armorBuilder.displayArmorObject(obj);
+    }
   }
   else if(method === 'head') {
     content.innerHTML += '<p>Meta Data Received</p>';
@@ -52,9 +59,6 @@ const handleResponse = async (response, method) => {
     }
   }
 
-  //let resObj = await response.json();
-
-  //content.innerHTML += `<p>${resObj.message}</p>`;
 };
 
 const sendFetch = async (url, acceptedType) => {
@@ -139,11 +143,13 @@ const getBuild = (headSelector,chestSelector,glovesSelector,waistSelector,legsSe
   fetchArmor(glovesSelector.value);
   fetchArmor(waistSelector.value);
   fetchArmor(legsSelector.value);
+
+  armorBuilder.displaySkills;
 }
 
-const getSave = async (loadButton) => {
+const getSave = async (loadButton, saveSelect) => {
   
-  const loadAction = loadButton.getAttribute('action');
+  const loadAction = loadButton.getAttribute('action') + saveSelect.value;
   const method = 'get';
 
   let response = await fetch(loadAction, {
@@ -156,12 +162,14 @@ const getSave = async (loadButton) => {
   handleResponse(response, method);
 };
 
-const sendPost = async (saveButton) => {
+const sendPost = async (saveButton, saveButtonName, saveSelect) => {
   const saveAction = saveButton.getAttribute('action');
   const saveMethod = saveButton.getAttribute('method');
 
-  const data = JSON.stringify(armorBuilder.returnArmorSetObject());
-  console.log(armorBuilder.returnArmorSetObject().head.name)
+  const object = armorBuilder.returnArmorSetObject();
+  object["build name"] = saveButtonName.value;
+
+  const data = JSON.stringify(object);
 
   let response = await fetch(saveAction, {
     method: saveMethod,
@@ -172,12 +180,19 @@ const sendPost = async (saveButton) => {
     body: data,
   });
 
+  let option = document.createElement("option");
+  option.value = `?saveName=${saveButtonName.value}`;
+  option.text = saveButtonName.value;
+  saveSelect.appendChild(option);
+
   handleResponse(response,saveMethod);
 }
 
 const init = () => {
   const createBuild = document.querySelector("#createBuild");
   const saveButton = document.querySelector("#saveButton");
+  const saveInputName = document.querySelector("#buildNameInput");
+  const saveSelect = document.querySelector("#saves");
   const loadButton = document.querySelector("#getSave");
   const headSelector = document.querySelector("#head");
   const chestSelector = document.querySelector("#chest");
@@ -190,11 +205,11 @@ const init = () => {
 
   const save = (e) => {
     e.preventDefault;
-    sendPost(saveButton);
+    sendPost(saveButton, saveInputName, saveSelect);
     return false;
   }
 
-  const loadSave = () => getSave(loadButton);
+  const loadSave = () => getSave(loadButton, saveSelect);
 
   createBuild.addEventListener('click', getInfo);
   saveButton.addEventListener('click', save);

@@ -60,7 +60,17 @@
 
     <div class="buttons control is-inline-block mx-2 p-4">
       <button class="button is-success is-light" id="createBuild">Create Build</button>
-      <button class="button is-info is-light" id="saveButton" action="/saveBuild" method="post">Save Build</button>
+    </div>
+    <br>
+    <div class="field is-horizontal is-inline-block">
+      <span class="field-body">
+        <div class="control">
+          <input id="buildNameInput" class="input" type="text" placeholder="Build Name">
+        </div>
+        <div class="buttons control is-inline-block ml-4">
+          <button class="button is-info is-light" id="saveButton" action="/saveBuild" method="post">Save Build</button>
+        </div>
+      </span>
     </div>
 
     <section class="content" id="status"></section>
@@ -68,8 +78,15 @@
 
   <section id="build" class="box has-text-centered has-background-success-light">
 
-    <div class="buttons control is-inline-block mx-2 p-4">
-      <button class="button is-primary is-light" id="getSave" action="/loadSave">Load</button>
+    <div class="field is-horizontal is-inline-block">
+      <span class="field-body">
+        <div class="select is-rounded">
+          <select class="select" id="saves"></select>
+        </div>
+        <div class="buttons control is-inline-block ml-4">
+          <button class="button is-primary is-light" id="getSave" action="/loadSave">Load</button>
+        </div>
+      </span>
     </div>
 
     <div class="container is-flex is-justify-content-space-between">
@@ -81,7 +98,7 @@
         <div class="card-content">
           <div class="card-image is-centered">
             <figure class="image is-128x128">
-              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image">
+              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image" id="headImage">
             </figure>
           </div>
           <div class="content">
@@ -97,7 +114,7 @@
         <div class="card-content">
           <div class="card-image">
             <figure class="image is-128x128">
-              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image">
+              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image" id="chestImage">
             </figure>
           </div>
           <div class="content">
@@ -113,7 +130,7 @@
         <div class="card-content">
           <div class="card-image">
             <figure class="image is-128x128">
-              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image">
+              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image" id="glovesImage">
             </figure>
           </div>
           <div class="content">
@@ -129,7 +146,7 @@
         <div class="card-content">
           <div class="card-image">
             <figure class="image is-128x128">
-              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image">
+              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image" id="waistImage">
             </figure>
           </div>
           <div class="content">
@@ -145,7 +162,7 @@
         <div class="card-content">
           <div class="card-image">
             <figure class="image is-128x128">
-              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image">
+              <img src="https://bulma.io/images/placeholders/640x480.png" alt="Placeholder image" id="legsImage">
             </figure>
           </div>
           <div class="content">
@@ -154,6 +171,11 @@
         </div>
       </div>
 
+    </div>
+    <div class="box is-rounded mt-4">
+      <div class="content has-text-weight-medium is-size-5">
+        <p id="skills"></p>
+      </div>
     </div>
   </section>
 </body>

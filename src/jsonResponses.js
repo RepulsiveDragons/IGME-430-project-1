@@ -16,19 +16,36 @@ const saveBuild = (request, response, body) => {
 
   const responseCode = 201;
   armorSetArray.push(body);
-  console.log(body.head.name);
   return respondJson(request, response, responseCode, responseJson);
 };
 
-const getSave = (request, response) => {
-  const armorSet = armorSetArray[0];
-  const responseJSON = armorSet;
+const getSave = (request, response, url, params) => {
+  const armorSet = {};
+  let responseJSON = armorSet;
 
   if (armorSetArray.length === 0) {
+    responseJSON = {
+      message: 'Nothing to load, save a build first',
+      id: 'badRequest',
+    };
     return respondJson(request, response, 400, responseJSON);
   }
 
-  return respondJson(request, response, 200, responseJSON);
+  if (params.saveName) {
+    console.log(params.saveName);
+    for (let i = 0; i < armorSetArray.length; i++) {
+      if (armorSetArray[i]['build name'] === params.saveName) {
+        responseJSON = armorSetArray[i];
+        return respondJson(request, response, 200, responseJSON);
+      }
+    }
+  }
+
+  responseJSON = {
+    message: 'Missing valid query parameter',
+    id: 'badRequest',
+  };
+  return respondJson(request, response, 400, responseJSON);
 };
 
 const notFound = (request, response) => {

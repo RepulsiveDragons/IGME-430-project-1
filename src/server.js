@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-// const query = require('querystring');
+const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
@@ -38,6 +38,7 @@ const urlStruct = {
     '/style.css': htmlHandler.getCSS,
     '/client.js': htmlHandler.getClient,
     '/utils/armorBuilder': htmlHandler.getArmorBuilder,
+    '/img/imageDNE.png': htmlHandler.getImage,
     '/loadSave': jsonHandler.getSave,
     notFound: jsonHandler.notFound,
   },
@@ -51,12 +52,14 @@ const onRequest = (request, response) => {
 
   const parsedUrl = url.parse(request.url);
 
+  const params = query.parse(parsedUrl.query);
+
   if (!urlStruct[request.method]) {
     return urlStruct.HEAD.notFound(request, response);
   }
 
   if (urlStruct[request.method][parsedUrl.pathname]) {
-    return urlStruct[request.method][parsedUrl.pathname](request, response, parsedUrl);
+    return urlStruct[request.method][parsedUrl.pathname](request, response, parsedUrl, params);
   }
 
   return urlStruct[request.method].notFound(request, response);
