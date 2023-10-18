@@ -1,6 +1,6 @@
 const armorSetArray = [];
 
-//Create the response object
+// Create the response object
 const respondJson = (request, response, status, object) => {
   const header = {
     'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ const respondJson = (request, response, status, object) => {
   response.end();
 };
 
-//head request version
+// head request version
 const respondJSONMeta = (request, response, status) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -20,30 +20,30 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
-//Post response
-//saves or updates an armorSetObject to the server
+// Post response
+// saves or updates an armorSetObject to the server
 const saveBuild = (request, response, body) => {
   const responseJson = {
     message: 'Saved Successfully.',
   };
   let responseCode = 201;
 
-  //check if the user inputted a name in the input field
+  // check if the user inputted a name in the input field
   if (!body['build name']) {
     responseJson.message = 'Type in the name of the build before saving';
     responseJson.id = 'missingParam';
     return respondJson(request, response, 400, responseJson);
   }
 
-  //check if there is a valid object to save
+  // check if there is a valid object to save
   if (!body.head) {
     responseJson.message = 'There was no build to save. Click Create build before saving';
     responseJson.id = 'invalidBuild';
     return respondJson(request, response, 400, responseJson);
   }
 
-  //check the exisiting saves to see if they share the same name as the current post object
-  //and update it
+  // check the exisiting saves to see if they share the same name as the current post object
+  // and update it
   for (let i = 0; i < armorSetArray.length; i++) {
     if (armorSetArray[i]['build name'] === body['build name']) {
       armorSetArray[i] = body;
@@ -51,7 +51,7 @@ const saveBuild = (request, response, body) => {
     }
   }
 
-  //save the valid object to the server
+  // save the valid object to the server
   if (responseCode === 201) {
     armorSetArray.push(body);
     return respondJson(request, response, responseCode, responseJson);
@@ -60,10 +60,9 @@ const saveBuild = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
-
-//Get response
-//retrieves one of the saved object in the server
-//only returns an object if requested using a query
+// Get response
+// retrieves one of the saved object in the server
+// only returns an object if requested using a query
 const getSave = (request, response, url, params) => {
   const armorSet = {};
   let responseJSON = armorSet;
@@ -75,9 +74,9 @@ const getSave = (request, response, url, params) => {
     };
     return respondJson(request, response, 400, responseJSON);
   }
-  
-  //if the request url had a query check the list of saved objects to see 
-  //which object to send to the client
+
+  // if the request url had a query check the list of saved objects to see
+  // which object to send to the client
   if (params.saveName) {
     for (let i = 0; i < armorSetArray.length; i++) {
       if (armorSetArray[i]['build name'] === params.saveName) {
@@ -94,7 +93,7 @@ const getSave = (request, response, url, params) => {
   return respondJson(request, response, 400, responseJSON);
 };
 
-//Respond with a 404 error code whenever the user tries to access a page that doesn't exist
+// Respond with a 404 error code whenever the user tries to access a page that doesn't exist
 const notFound = (request, response) => {
   const responseJSON = {
     message: 'The page you are looking for was not found.',

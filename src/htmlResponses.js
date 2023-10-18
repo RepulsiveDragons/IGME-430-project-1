@@ -49,5 +49,5 @@ module.exports = {
   getClient,
   getArmorBuilder,
   getImage,
-  getBackground
+  getBackground,
 };

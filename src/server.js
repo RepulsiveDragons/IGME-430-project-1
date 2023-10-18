@@ -6,7 +6,7 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-//parse the object body and call the call back function sending the parsed object with it
+// parse the object body and call the call back function sending the parsed object with it
 const parseBody = (request, response, handler) => {
   const body = [];
 
@@ -27,14 +27,13 @@ const parseBody = (request, response, handler) => {
   });
 };
 
-
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/saveBuild') {
     parseBody(request, response, jsonHandler.saveBuild);
   }
 };
 
-//an object with the request url as the key and its corresonding call back function
+// an object with the request url as the key and its corresonding call back function
 const urlStruct = {
   GET: {
     '/': htmlHandler.getIndex,
@@ -51,7 +50,7 @@ const urlStruct = {
   },
 };
 
-//take in a request and call the appropriate call back function
+// take in a request and call the appropriate call back function
 const onRequest = (request, response) => {
   console.log(request.url);
 
