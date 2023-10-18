@@ -1,4 +1,3 @@
-const armorSetArray = [];
 let armorSetObject = {};
 let combinedSkillsObject = {};
 
@@ -14,11 +13,14 @@ const waistImage = document.querySelector('#waistImage');
 const legsImage = document.querySelector('#legsImage');
 const skillsContent = document.querySelector('#skills');
 
+//clear the armorSetObject and the combinedSkillsObject
 export const clearObjects = () => {
   armorSetObject = {};
   combinedSkillsObject = {};
 };
 
+//Adds a skill to the combinedSkillsObject if it doesnt exist alread
+//If it already exists then add the value of the level to the existing level
 const combineSkills = (skillName, level) => {
   if (!combinedSkillsObject[skillName]) {
     combinedSkillsObject[skillName] = {};
@@ -29,6 +31,8 @@ const combineSkills = (skillName, level) => {
   combinedSkillsObject[skillName].level += level;
 };
 
+//Takes in an armor object from the external API
+//Extract the necessary data from the armor object and put it in the armorSetObject
 export const sendArmor = (armor) => {
   armorSetObject[armor.type] = {};
   armorSetObject[armor.type].name = armor.name;
@@ -36,7 +40,7 @@ export const sendArmor = (armor) => {
     armorSetObject[armor.type].image = armor.assets.imageMale;
   }
   else{
-    armorSetObject[armor.type].image = '../img/imageDNE.png';
+    armorSetObject[armor.type].image = '../img/imageDNE.png'; //use a default image if an image doesnt exist
   }
   armorSetObject[armor.type].skills = [];
 
@@ -50,14 +54,15 @@ export const sendArmor = (armor) => {
 
   displayArmor(armor.type, armor.name, armorSetObject[armor.type].image);
   displaySkills(combinedSkillsObject);
-  //armorSetArray.push(armorSetObject);
 };
 
+//returns the armorSetObject with the combined skills in it
 export const returnArmorSetObject = () => {
   armorSetObject['combined skills'] = combinedSkillsObject;
   return armorSetObject;
 };
 
+//display the name and the image of the armor to the client
 const displayArmor = (type, name, image) => {
 
   switch(type){
@@ -86,6 +91,7 @@ const displayArmor = (type, name, image) => {
   }
 }
 
+//similar to the displayArmorObject but this method takes in an armorSetObject
 export const displayArmorObject = (object) => {
   headName.innerHTML = object.head.name;
   chestName.innerHTML = object.chest.name;
@@ -102,6 +108,7 @@ export const displayArmorObject = (object) => {
   displaySkills(object['combined skills']);
 }
 
+//display the combined skills to the client
 export const displaySkills = (combinedSkillsObject) => {
 
   skillsContent.innerHTML = 'Combined Skills: ';

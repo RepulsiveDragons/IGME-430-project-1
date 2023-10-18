@@ -4,3 +4,10 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+#heroBackground{
+  background-image: url('../img/mhw_background.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}

@@ -5,6 +5,7 @@ const css = fs.readFileSync(`${__dirname}/../client/style.css`);
 const client = fs.readFileSync(`${__dirname}/../client/client.js`);
 const armorBuilder = fs.readFileSync(`${__dirname}/../utils/armorBuilder.js`);
 const image = fs.readFileSync(`${__dirname}/../img/imageDNE.png`);
+const backgroundImage = fs.readFileSync(`${__dirname}/../img/mhw_background.jpg`);
 
 const getIndex = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -36,10 +37,17 @@ const getImage = (request, response) => {
   response.end();
 };
 
+const getBackground = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'image/jpg' });
+  response.write(backgroundImage);
+  response.end();
+};
+
 module.exports = {
   getIndex,
   getCSS,
   getClient,
   getArmorBuilder,
   getImage,
+  getBackground
 };

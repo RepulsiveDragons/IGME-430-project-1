@@ -19,20 +19,11 @@ const handleResponse = async (response, method, saveButtonName, saveSelect) => {
     case 400: 
       content.innerHTML = `<b>Bad Request</b>`;
       break;
-    case 401:
-      content.innerHTML = `<b>Unathorized Access</b>`;
-        break;
-    case 403:
-      content.innerHTML = `<b>Forbidden</b>`;
-        break;
     case 404: 
       content.innerHTML = `<b>Not Found</b>`;
       break;
     case 500:
       content.innerHTML = `<b>Internal Server Error</b>`;
-      break;
-    case 501:
-      content.innerHTML = `<b>Status Code Not Implemented</b>`;
       break;
     default: 
       content.innerHTML = `<p>Not Found</p>`;
@@ -50,12 +41,10 @@ const handleResponse = async (response, method, saveButtonName, saveSelect) => {
       armorBuilder.displayArmorObject(obj);
     }
   }
-  else if(method === 'head') {
-    content.innerHTML += '<p>Meta Data Received</p>';
-  }
   else if(method === 'post'){
     if(response.status === 204) return;
 
+    //create an option for the saved build
     if(response.status === 201){
       let option = document.createElement("option");
       option.value = `?saveName=${saveButtonName.value}`;
@@ -71,16 +60,6 @@ const handleResponse = async (response, method, saveButtonName, saveSelect) => {
     }
   }
 
-};
-
-const sendFetch = async (url, acceptedType) => {
-  const options = {
-    method: 'GET',
-    headers: {'Accept': acceptedType},
-  }
-
-  const promise = fetch(url,options);
-  promise.then((response) => { handleResponse(response) });
 };
 
 //create the drop down menus dynamically with each option being
@@ -107,7 +86,7 @@ const fetchArmor = async (id) => {
 //call the Monster Hunter API
 const getFetch = async (headSelector,chestSelector,glovesSelector,waistSelector,legsSelector) => {
 
-  //a query call to get only armors that are of the rank master
+  //a query call to get only armors that are of the rank high
   fetch(urlMH + '?q={"rank":"high"}')
   .then(response => response.json())
   .then(armor => {
@@ -161,6 +140,8 @@ const getBuild = (headSelector,chestSelector,glovesSelector,waistSelector,legsSe
   armorBuilder.displaySkills;
 }
 
+//get method
+//get one of the saved armorSetObjects from the server
 const getSave = async (loadButton, saveSelect) => {
   
   const loadAction = loadButton.getAttribute('action') + saveSelect.value;
@@ -176,12 +157,14 @@ const getSave = async (loadButton, saveSelect) => {
   handleResponse(response, method);
 };
 
+//post method
+//sends the armorSetObject to the server
 const sendPost = async (saveButton, saveButtonName, saveSelect) => {
   const saveAction = saveButton.getAttribute('action');
   const saveMethod = saveButton.getAttribute('method');
 
   const object = armorBuilder.returnArmorSetObject();
-  object["build name"] = saveButtonName.value;
+  object["build name"] = saveButtonName.value; //add in the build name from the user input field
 
   const data = JSON.stringify(object);
 
@@ -198,6 +181,7 @@ const sendPost = async (saveButton, saveButtonName, saveSelect) => {
   handleResponse(response,saveMethod,saveButtonName,saveSelect);
 }
 
+//initialize events and variables on page load
 const init = () => {
   const createBuild = document.querySelector("#createBuild");
   const saveButton = document.querySelector("#saveButton");
